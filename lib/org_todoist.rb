@@ -8,7 +8,7 @@ module OrgTodoist
   end
 
   def self.api
-    @api ||= OrgTodoist::Api.new
+    @api ||= OrgTodoist::Api.new(verbose: !!ENV['VERBOSE'])
   end
 
   def self.uuid
