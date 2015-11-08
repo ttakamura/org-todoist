@@ -30,7 +30,8 @@ module OrgTodoist
     end
 
     def todoist_safe_key
-      @todoist_safe_key ||= %w(id content due_date_utc priority
+      @todoist_safe_key ||= %w(id content priority checked
+                               due_date_utc date_string
                                item_order indent collapsed project_id)
     end
   end

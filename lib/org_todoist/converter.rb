@@ -61,6 +61,7 @@ module OrgTodoist
         }
         if headline.scheduled_at
           attrs['due_date_utc'] = time_todoist_format(headline.scheduled_at.start_time)
+          attrs['date_string']  = attrs['due_date_utc']
         end
         OrgTodoist::Item.find_or_init(attrs)
       end
