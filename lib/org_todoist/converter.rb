@@ -21,43 +21,47 @@ module OrgTodoist
 
       def to_todoist_projects top_headline
         projects = []
-        top_headline.all_sub_headlines.each do |headline|
+        top_headline.all_sub_headlines.each_with_index do |headline, item_order|
           if headline.project?
-            current_pj = to_todoist_project(headline, 1)
-            headline.todoist_obj = current_pj
-            to_todoist_items(headline, current_pj)
-            projects << current_pj
+            level   = headline.level - top_headline.level
+            project = to_todoist_project(headline, level, item_order+1)
+            headline.todoist_obj = project
+            to_todoist_items(headline, project)
+            projects << project
           end
         end
         projects
       end
 
       def to_todoist_items top_headline, current_pj
-        top_headline.all_sub_headlines.each do |headline|
+        top_headline.all_sub_headlines.each_with_index do |headline, item_order|
           if headline.action?
-            item = to_todoist_item(headline, current_pj, (headline.level - top_headline.level))
+            level = headline.level - top_headline.level
+            item  = to_todoist_item(headline, current_pj, level, item_order+1)
             headline.todoist_obj = item
             current_pj.items << item
           end
         end
       end
 
-      def to_todoist_project headline, indent
+      def to_todoist_project headline, indent, item_order
         attrs = {
           "id"           => headline.id,
           "name"         => headline.title,
-          "indent"       => indent
+          "indent"       => indent,
+          "item_order"   => item_order
         }
         OrgTodoist::Project.find_or_init(attrs)
       end
 
-      def to_todoist_item headline, project, indent
+      def to_todoist_item headline, project, indent, item_order
         attrs = {
           "checked"      => (headline.done? ? 1 : 0),
           "id"           => headline.id,
           "content"      => headline.title,
           "indent"       => indent,
-          "project"      => project
+          "project"      => project,
+          "item_order"   => item_order
         }
         if headline.scheduled_at
           attrs['due_date_utc'] = time_todoist_format(headline.scheduled_at.start_time)
