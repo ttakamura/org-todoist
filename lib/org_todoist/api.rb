@@ -1,3 +1,4 @@
+# coding: utf-8
 module OrgTodoist
   class Api
     include HTTParty
@@ -38,6 +39,23 @@ module OrgTodoist
       @commands   = []
       @new_models = []
       res
+    end
+
+    # 全ての projects と items を削除する
+    def seppuku!
+      pull
+      OrgTodoist::Project.records.each do |k, project|
+        if project.name != 'Inbox'
+          project.destroy! self
+        end
+      end
+      push
+
+      pull
+      OrgTodoist::Item.records.each do |k, item|
+        item.destroy! self
+      end
+      push
     end
 
     private
