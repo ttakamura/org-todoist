@@ -61,8 +61,8 @@ module OrgFormat
     def print_headline headline
       print_text headline.to_s,            0
       print_text headline.schedule_to_s,   headline.level + 1
-      print_text headline.clock_logs_to_s, headline.level + 1
       print_text headline.properties_to_s, headline.level + 1
+      print_text headline.clock_logs_to_s, headline.level + 1
       print_text headline.body_to_s,       0
 
       headline.headlines.each do |sub_head|

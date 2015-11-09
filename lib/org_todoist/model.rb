@@ -34,7 +34,8 @@ module OrgTodoist
           records[id].assign(attrs)
           records[id]
         else
-          self.new attrs
+          # Todoist に存在しない => 新規作成
+          self.new attrs.select{ |k,v| k != 'id' }
         end
       end
     end
