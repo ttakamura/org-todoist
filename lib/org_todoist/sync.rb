@@ -34,7 +34,6 @@ module OrgTodoist
           puts "- Action level:#{it.indent}, order:#{it.item_order} #{ '  '*(pj.indent + it.indent) } #{it.content}"
         end
       end
-      raise 'foo'
     end
 
     def pull_todoist
