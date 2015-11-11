@@ -12,6 +12,7 @@ module OrgTodoist
     def sync!
       pull_todoist
       import_org_file
+      print_projects_tree
       push_todoist_projects
       push_todoist_items
       fetch_todoist_changes
@@ -24,6 +25,16 @@ module OrgTodoist
       OrgTodoist::Converter.to_todoist_projects(@org_head).each do |pj|
         @projects << pj
       end
+    end
+
+    def print_projects_tree
+      @projects.each do |pj|
+        puts "* Project level:#{pj.indent}, order:#{pj.item_order} #{ '  '*pj.indent } #{pj.name}"
+        pj.items.each do |it|
+          puts "- Action level:#{it.indent}, order:#{it.item_order} #{ '  '*(pj.indent + it.indent) } #{it.content}"
+        end
+      end
+      raise 'foo'
     end
 
     def pull_todoist

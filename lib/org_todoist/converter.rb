@@ -1,6 +1,6 @@
 module OrgTodoist
   class Converter
-    class << self
+    module FromTodoist
       def from_todoist_obj headline, obj
         if obj.is_a?(OrgTodoist::Project)
           OrgTodoist::Converter.from_todoist_project(headline, obj)
@@ -18,58 +18,82 @@ module OrgTodoist
         headline.id    = item.id
         headline.title = item.content
       end
+    end
 
-      def to_todoist_projects top_headline
+    module FromOrgFormat
+      def to_todoist_projects top_headline, current_level=1
         projects = []
-        top_headline.all_sub_headlines.each_with_index do |headline, item_order|
+
+        top_headline.headlines.each do |headline|
           if headline.project?
-            level   = headline.level - top_headline.level
-            project = to_todoist_project(headline, level, item_order+1)
-            headline.todoist_obj = project
-            to_todoist_items(headline, project)
-            projects << project
+            projects << to_todoist_project(headline, current_level)
+            projects << to_todoist_projects(headline, current_level+1)
+          else
+            projects << to_todoist_projects(headline, current_level)
           end
         end
-        projects
+
+        projects.flatten.each_with_index do |project, index|
+          project.item_order = index+1
+        end
       end
 
-      def to_todoist_items top_headline, current_pj
-        top_headline.all_sub_headlines.each_with_index do |headline, item_order|
+      def to_todoist_items top_headline, current_pj, current_level=1
+        items = []
+
+        top_headline.headlines.each do |headline|
           if headline.action?
-            level = headline.level - top_headline.level
-            item  = to_todoist_item(headline, current_pj, level, item_order+1)
-            headline.todoist_obj = item
-            current_pj.items << item
+            items << to_todoist_item(headline, current_pj, current_level)
+            items << to_todoist_items(headline, current_pj, current_level+1)
           end
+        end
+
+        items.flatten.each_with_index do |item, index|
+          item.item_order = index+1
         end
       end
 
-      def to_todoist_project headline, indent, item_order
+      def to_todoist_project headline, indent
         attrs = {
-          "id"           => headline.id,
-          "name"         => headline.title,
-          "indent"       => indent,
-          "item_order"   => item_order
+          "id"     => headline.id,
+          "name"   => headline.title,
+          "indent" => indent
         }
-        OrgTodoist::Project.find_or_init(attrs)
+
+        project = OrgTodoist::Project.find_or_init(attrs)
+        headline.todoist_obj = project
+
+        to_todoist_items(headline, project).each do |item|
+          project.items << item
+        end
+
+        project
       end
 
-      def to_todoist_item headline, project, indent, item_order
+      def to_todoist_item headline, project, indent
         attrs = {
-          "checked"      => (headline.done? ? 1 : 0),
-          "id"           => headline.id,
-          "content"      => headline.title,
-          "indent"       => indent,
-          "project"      => project,
-          "item_order"   => item_order
+          "checked" => (headline.done? ? 1 : 0),
+          "id"      => headline.id,
+          "content" => headline.title,
+          "indent"  => indent,
+          "project" => project
         }
         if headline.scheduled_at
           attrs['due_date_utc'] = time_todoist_format(headline.scheduled_at.start_time)
           attrs['date_string']  = attrs['due_date_utc']
         end
-        OrgTodoist::Item.find_or_init(attrs)
-      end
 
+        item = OrgTodoist::Item.find_or_init(attrs)
+        headline.todoist_obj = item
+        item
+      end
+    end
+
+    class << self
+      include FromTodoist
+      include FromOrgFormat
+
+      private
       def time_todoist_format time
         time.utc.strftime("%Y-%m-%dT%H:%M:%S")
       end

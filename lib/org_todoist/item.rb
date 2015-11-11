@@ -15,6 +15,10 @@ module OrgTodoist
       super(raw_item)
     end
 
+    def item_order= new_order
+      @raw['item_order'] = new_order
+    end
+
     def create! api
       @raw['project_id'] = @project.id
       api.reserve 'item_add', self, to_args
