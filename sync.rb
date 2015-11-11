@@ -6,5 +6,9 @@ OrgTodoist.configure
 
 sync = OrgTodoist::Sync.new(ARGV.shift, ARGV.shift)
 
-byebug
-binding.pry
+if ENV['DEBUG']
+  byebug
+  binding.pry
+else
+  sync.sync!
+end
