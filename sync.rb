@@ -4,7 +4,10 @@ Bundler.require
 require 'org_todoist'
 OrgTodoist.configure
 
-sync = OrgTodoist::Sync.new(ARGV.shift, ARGV.shift)
+infile  = ARGV.shift
+outfile = ARGV.shift || infile
+
+sync = OrgTodoist::Sync.new(infile, outfile)
 
 if ENV['DEBUG']
   byebug
