@@ -15,4 +15,5 @@ if ENV['DEBUG']
   binding.pry
 else
   sync.sync!
+  puts "Success Sync!"
 end
