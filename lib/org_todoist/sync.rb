@@ -57,9 +57,21 @@ module OrgTodoist
     end
 
     def fetch_todoist_changes
-      @org_head.all_sub_headlines.each do |headline|
+      # Update
+      org_headlines = @org_head.all_sub_headlines
+      org_inbox     = @org_head.headlines.first
+
+      org_headlines.each do |headline|
         if obj = headline.todoist_obj
           OrgTodoist::Converter.from_todoist_obj(headline, obj)
+        end
+      end
+
+      # Create (inbox)
+      todoist_inbox = OrgTodoist::Project.records.values.find{|pj| pj.name == "Inbox" }
+      todoist_inbox.items.each do |item|
+        unless org_headlines.find{ |h| h.id.to_s == item.id.to_s }
+          org_inbox.headlines << OrgTodoist::Converter.from_todoist_new_item(item)
         end
       end
     end

@@ -18,6 +18,12 @@ module OrgTodoist
         headline.id    = item.id
         headline.title = item.content
       end
+
+      def from_todoist_new_item item
+        headline = OrgFormat::Headline.parse_org("** IDEA dummy").headlines.first
+        from_todoist_item(headline, item)
+        headline
+      end
     end
 
     module FromOrgFormat
