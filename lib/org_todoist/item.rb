@@ -15,22 +15,34 @@ module OrgTodoist
       super(raw_item)
     end
 
+    def project
+      @project || @raw['project']
+    end
+
     def item_order= new_order
       @raw['item_order'] = new_order
     end
 
     def create! api
-      @raw['project_id'] = @project.id
+      @raw['project_id'] = project.id
       api.reserve 'item_add', self, to_args
     end
 
     def update! api
+      if @raw['project_id'] != project.id
+        move_project! api, @raw['project_id'], project.id
+      end
       api.reserve 'item_update', self, to_args
     end
 
     def destroy! api
       raise 'Not persisted' unless persisted?
       api.reserve 'item_delete', self, {'ids' => [id]}
+    end
+
+    def move_project! api, from_id, to_id
+      args = {"project_items": {from_id => [id]}, "to_project": to_id}
+      api.reserve 'item_move', self, args
     end
 
     def todoist_safe_key
