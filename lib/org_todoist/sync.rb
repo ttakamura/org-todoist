@@ -12,7 +12,7 @@ module OrgTodoist
     def sync!
       pull_todoist
       import_org_file
-      print_projects_tree
+      print_projects_tree    if OrgTodoist.verbose?
       push_todoist_projects
       push_todoist_items
       fetch_todoist_changes

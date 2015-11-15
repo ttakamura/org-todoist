@@ -3,12 +3,20 @@ module OrgTodoist
     @token = ENV["ORG_TODOIST_TOKEN"].chomp
   end
 
+  def self.verbose?
+    !!ENV['VERBOSE']
+  end
+
+  def self.debug?
+    !!ENV['DEBUG']
+  end
+
   def self.token
     @token
   end
 
   def self.api
-    @api ||= OrgTodoist::Api.new(verbose: !!ENV['VERBOSE'])
+    @api ||= OrgTodoist::Api.new(verbose: verbose?)
   end
 
   def self.uuid

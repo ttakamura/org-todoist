@@ -10,7 +10,7 @@ outfile = ARGV.shift || infile
 
 sync = OrgTodoist::Sync.new(infile, outfile)
 
-if ENV['DEBUG']
+if OrgTodoist.debug?
   byebug
   binding.pry
 else
