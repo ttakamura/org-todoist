@@ -1,6 +1,6 @@
 module OrgTodoist
   def self.configure
-    @token = ENV["ORG_TODOIST_TOKEN"]
+    @token = ENV["ORG_TODOIST_TOKEN"].chomp
   end
 
   def self.token

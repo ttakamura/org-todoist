@@ -1,5 +1,6 @@
 require 'bundler'
 Bundler.require
+Dotenv.load
 
 require 'org_todoist'
 OrgTodoist.configure
