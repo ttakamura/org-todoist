@@ -13,8 +13,12 @@ module OrgTodoist
       pull_todoist
       import_org_file
       print_projects_tree    if OrgTodoist.verbose?
+
       push_todoist_projects
       push_todoist_items
+      archive_todoist_projects
+      archive_todoist_items
+
       fetch_todoist_changes
       export_org_file
       true
@@ -54,6 +58,14 @@ module OrgTodoist
         end
       end
       @api.push
+    end
+
+    def archive_todoist_projects
+
+    end
+
+    def archive_todoist_items
+
     end
 
     def fetch_todoist_changes
