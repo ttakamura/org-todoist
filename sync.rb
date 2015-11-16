@@ -2,6 +2,7 @@ require 'bundler'
 Bundler.require
 Dotenv.load
 
+$LOAD_PATH << File.dirname(__FILE__) + "/lib"
 require 'org_todoist'
 OrgTodoist.configure
 
