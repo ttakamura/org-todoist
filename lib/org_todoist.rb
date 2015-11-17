@@ -19,6 +19,10 @@ module OrgTodoist
     @api ||= OrgTodoist::Api.new(verbose: verbose?)
   end
 
+  def self.db
+    @db ||= OrgTodoist::DB.new("db/todoist.yaml")
+  end
+
   def self.uuid
     `uuidgen`.chomp
   end
@@ -33,6 +37,7 @@ end
 
 require 'org_todoist/model'
 require 'org_todoist/api'
+require 'org_todoist/db'
 require 'org_todoist/project'
 require 'org_todoist/item'
 require 'org_todoist/sync'

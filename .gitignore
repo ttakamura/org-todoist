@@ -1,5 +1,6 @@
 .env
 sync.sh
+db/
 
 # Created by https://www.gitignore.io/api/osx,linux,ruby
 
