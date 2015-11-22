@@ -9,6 +9,9 @@ module OrgTodoist
       @projects = []
     end
 
+    def foobar
+    end
+
     def sync!
       pull_todoist
       import_org_file

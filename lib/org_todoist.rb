@@ -23,6 +23,10 @@ module OrgTodoist
     @db ||= OrgTodoist::DB.new("db/todoist.yaml")
   end
 
+  def self.calendar
+    @calendar ||= OrgTodoist::Calendar.new(ENV['CAL_CLIENT_ID'], ENV['CAL_CLIENT_SEC'], ENV['CALENDAR_ID'])
+  end
+
   def self.uuid
     `uuidgen`.chomp
   end
@@ -38,6 +42,7 @@ end
 require 'org_todoist/model'
 require 'org_todoist/api'
 require 'org_todoist/db'
+require 'org_todoist/calendar'
 require 'org_todoist/project'
 require 'org_todoist/item'
 require 'org_todoist/sync'
