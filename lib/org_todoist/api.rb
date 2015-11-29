@@ -95,8 +95,14 @@ module OrgTodoist
         @body = JSON.parse(raw_res.body)
 
         if @body['Projects']
+          notes = {}
+          @body['Notes'].each do |note|
+            (notes[note['item_id']] ||= []) << note
+          end
+
           items = {}
           @body['Items'].each do |item|
+            item['notes'] = notes[item['id']] || []
             (items[item['project_id']] ||= []) << item
           end
 

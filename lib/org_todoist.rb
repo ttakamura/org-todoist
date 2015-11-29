@@ -45,6 +45,7 @@ require 'org_todoist/db'
 require 'org_todoist/calendar'
 require 'org_todoist/project'
 require 'org_todoist/item'
+require 'org_todoist/note'
 require 'org_todoist/sync'
 require 'org_todoist/converter'
 

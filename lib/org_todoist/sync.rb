@@ -64,11 +64,9 @@ module OrgTodoist
     end
 
     def archive_todoist_projects
-
     end
 
     def archive_todoist_items
-
     end
 
     def fetch_todoist_changes

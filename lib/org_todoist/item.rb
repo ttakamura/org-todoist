@@ -12,11 +12,16 @@ module OrgTodoist
       raw_item['item_order'] ||= (self.class.records.last_item_order + 1)
       @project  = raw_item.delete('project')
       @children = []
+      @notes    = (raw_item.delete('notes') || []).map{ |n| Note.new n.merge('item' => self) }
       super(raw_item)
     end
 
     def project
       @project || @raw['project']
+    end
+
+    def notes
+      @notes
     end
 
     def item_order= new_order
