@@ -14,6 +14,10 @@ module OrgTodoist
       @item || @raw['item']
     end
 
+    def content= new_text
+      @raw['content'] = new_text
+    end
+
     def create! api
       @raw['item_id'] = item.id
       api.reserve 'note_add', self, to_args

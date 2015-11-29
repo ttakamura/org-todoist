@@ -91,7 +91,20 @@ module OrgTodoist
 
         item = OrgTodoist::Item.find_or_init(attrs)
         headline.todoist_obj = item
+
+        to_todoist_note headline, item
+
         item
+      end
+
+      def to_todoist_note headline, item
+        text = headline.body_lines.join("\n")
+
+        if note = item.notes.first
+          note.content = text
+        else
+          item.notes << OrgTodoist::Note.new('content' => text, 'item' => item)
+        end
       end
     end
 
