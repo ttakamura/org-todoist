@@ -71,6 +71,9 @@ module OrgTodoist
 
     def swap_temp_ids res
       @new_models.each do |model|
+        # debug
+        # p res.body['TempIdMapping']
+        # p model
         id = res.body['TempIdMapping'][model.temp_id]
         model.swap_temp_id id
       end
