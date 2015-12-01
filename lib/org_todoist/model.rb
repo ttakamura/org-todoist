@@ -69,11 +69,25 @@ module OrgTodoist
     end
 
     def changed?
-      !changes.empty?
+      result = !changes.empty?
+      if OrgTodoist.verbose? && result
+        puts "Model#changed? - changes: #{changes}"
+      end
+      result
     end
 
     def changes
-      @old_raw.reject{ |k, v| v == @raw[k] }
+      @old_raw.reject do |k, v|
+        case k
+        when 'due_date_utc'
+          v == @raw[k] ||
+          DateTime.parse(v) == DateTime.parse(@raw[k])
+        else
+          v == @raw[k]
+        end
+      end.map do |k, v|
+        [k, [v, @raw[k]]]
+      end
     end
 
     def swap_temp_id id
