@@ -29,16 +29,18 @@ module OrgTodoist
       @new_models << model   unless model.persisted?
     end
 
-    def push options={}, &block
-      puts "Push org => todoist" if @verbose
-      pp @commands if @verbose
-      body = {commands: @commands.to_json}
-      res  = post '/sync', body: body
-      swap_temp_ids res
-      @handler    = Handler.new res
+    def push options={}
+      @commands.each_slice(50) do |commands|
+        if @verbose
+          puts "-" * 40
+          puts "Push org => todoist with #{commands.size} commands"
+          puts "Current handler is #{@handler.to_h}"
+        end
+        push_chunk_of_commands commands
+      end
       @commands   = []
       @new_models = []
-      res
+      nil
     end
 
     # 全ての projects と items を削除する
@@ -59,6 +61,14 @@ module OrgTodoist
     end
 
     private
+    def push_chunk_of_commands commands, options={}
+      pp commands if @verbose
+      body = {commands: commands.to_json}
+      res  = post '/sync', body: body
+      swap_temp_ids res
+      @handler = Handler.new res
+    end
+
     def get path, options
       options[:query][:token] = @token
       Response.new self.class.get(path, options)
