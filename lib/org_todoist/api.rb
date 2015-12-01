@@ -73,7 +73,8 @@ module OrgTodoist
       @new_models.each do |model|
         # debug
         # p res.body['TempIdMapping']
-        # p model
+        # p res.body
+        # p model.temp_id
         id = res.body['TempIdMapping'][model.temp_id]
         model.swap_temp_id id
       end
