@@ -95,8 +95,8 @@ module OrgTodoist
       attr_reader :body, :projects
 
       def initialize raw_res
-        check_error raw_res
         @body = JSON.parse(raw_res.body)
+        check_error raw_res
 
         if @body['Projects']
           notes = {}
@@ -126,8 +126,9 @@ module OrgTodoist
           raise "ClientSide error - #{raw_res.code} #{raw_res}"
         end
 
-        if raw_res && raw_res['SyncStatus']
-          raw_res['SyncStatus'].each do |key, value|
+        # p @body
+        if @body['SyncStatus']
+          @body['SyncStatus'].each do |key, value|
             if value == 'ok'
               # {uuid => 'ok'}
             elsif value.is_a?(Hash) && value.values.all?{ |x| x == 'ok' }
