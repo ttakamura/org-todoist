@@ -80,6 +80,7 @@ module OrgTodoist
       @old_raw.reject do |k, v|
         case k
         when 'due_date_utc'
+          v.nil? ||
           v == @raw[k] ||
           DateTime.parse(v) == DateTime.parse(@raw[k])
         else
