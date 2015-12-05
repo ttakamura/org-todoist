@@ -18,9 +18,7 @@ module OrgTodoist
       print_projects_tree if OrgTodoist.verbose?
 
       push_todoist_projects
-      if OrgTodoist.debug?
-        puts "Please wait a sec..." && gets
-      end
+      debugger if OrgTodoist.debug?
       push_todoist_items
 
       fetch_todoist_changes
