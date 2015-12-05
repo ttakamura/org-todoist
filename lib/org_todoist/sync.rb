@@ -19,8 +19,6 @@ module OrgTodoist
 
       push_todoist_projects
       push_todoist_items
-      archive_todoist_projects
-      archive_todoist_items
 
       fetch_todoist_changes
       export_org_file
