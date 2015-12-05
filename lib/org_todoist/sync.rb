@@ -16,12 +16,20 @@ module OrgTodoist
       pull_todoist
       import_org_file
       print_projects_tree if OrgTodoist.verbose?
+      debugger            if OrgTodoist.debug?
 
       push_todoist_projects
-      debugger if OrgTodoist.debug?
+      debugger            if OrgTodoist.debug?
+
       push_todoist_items
+      debugger            if OrgTodoist.debug?
+
+      push_todoist_notes
+      debugger            if OrgTodoist.debug?
 
       fetch_todoist_changes
+      debugger            if OrgTodoist.debug?
+
       export_org_file
       true
     end
@@ -62,10 +70,15 @@ module OrgTodoist
       @api.push
     end
 
-    def archive_todoist_projects
-    end
-
-    def archive_todoist_items
+    def push_todoist_notes
+      @projects.each do |pj|
+        pj.items.each do |itm|
+          itm.notes.each do |note|
+            note.save! @api
+          end
+        end
+      end
+      @api.push
     end
 
     def fetch_todoist_changes

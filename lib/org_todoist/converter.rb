@@ -99,6 +99,7 @@ module OrgTodoist
 
       def to_todoist_note headline, item
         text = headline.body_lines.join("\n")
+        return if text == ""
 
         if note = item.notes.first
           note.content = text
