@@ -15,9 +15,12 @@ module OrgTodoist
     def sync!
       pull_todoist
       import_org_file
-      print_projects_tree    if OrgTodoist.verbose?
+      print_projects_tree if OrgTodoist.verbose?
 
       push_todoist_projects
+      if OrgTodoist.debug?
+        puts "Please wait a sec..." && gets
+      end
       push_todoist_items
 
       fetch_todoist_changes
