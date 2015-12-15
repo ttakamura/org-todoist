@@ -72,11 +72,15 @@ module OrgTodoist
     def get path, options
       options[:query][:token] = @token
       Response.new self.class.get(path, options)
+    rescue => e
+      raise "#{e.message} - GET #{path} #{options}"
     end
 
     def post path, options
       options[:body][:token] = @token
       Response.new self.class.post(path, options)
+    rescue => e
+      raise "#{e.message} - POST #{path} #{options}"
     end
 
     def swap_temp_ids res
