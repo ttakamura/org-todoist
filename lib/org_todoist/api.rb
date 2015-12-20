@@ -1,6 +1,7 @@
 # coding: utf-8
 module OrgTodoist
   class Api
+    include Logging
     include HTTParty
     # debug_output $stdout
     base_uri 'https://todoist.com/API/v6'
@@ -17,7 +18,7 @@ module OrgTodoist
     def pull handler=@handler, options={}
       query = options.merge(handler.to_h).merge({resource_types: '["all"]'})
       res   = get '/sync', query: query
-      puts "Pull todoist => org" if @verbose
+      log.info "Pull todoist => org" if @verbose
       @handler = Handler.new res
       res
     end
@@ -32,9 +33,9 @@ module OrgTodoist
     def push options={}
       @commands.each_slice(50) do |commands|
         if @verbose
-          puts "-" * 40
-          puts "Push org => todoist with #{commands.size} commands"
-          puts "Current handler is #{@handler.to_h}"
+          log.info "-" * 40
+          log.info "Push org => todoist with #{commands.size} commands"
+          log.info "Current handler is #{@handler.to_h}"
         end
         push_chunk_of_commands commands
       end
@@ -62,7 +63,7 @@ module OrgTodoist
 
     private
     def push_chunk_of_commands commands, options={}
-      pp commands if @verbose
+      log.info commands if @verbose
       body = {commands: commands.to_json}
       res  = post '/sync', body: body
       swap_temp_ids res
@@ -145,10 +146,11 @@ module OrgTodoist
           @body['SyncStatus'].each do |key, value|
             if value == 'ok'
               # {uuid => 'ok'}
+              log.info "SyncStatus is OK key:#{key}, value:#{value}"
             elsif value.is_a?(Hash) && value.values.all?{ |x| x == 'ok' }
               # {uuid => {id => 'ok'}}
             else
-              raise "SyncStatus is error - #{raw_res['SyncStatus']}"
+              log.error "SyncStatus is error key:#{key}, value:#{value} - #{raw_res['SyncStatus']}"
             end
           end
         end

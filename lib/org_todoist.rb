@@ -30,6 +30,16 @@ module OrgTodoist
   def self.uuid
     `uuidgen`.chomp
   end
+
+  def self.logger
+    @logger = Logger.new("log/todoist.log")
+  end
+
+  module Logging
+    def log
+      OrgTodoist.logger
+    end
+  end
 end
 
 # monkey-patch
