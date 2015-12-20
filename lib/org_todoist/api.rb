@@ -9,7 +9,6 @@ module OrgTodoist
 
     def initialize options={}
       @token      = options[:token]   || OrgTodoist.token
-      @verbose    = options[:verbose] || false
       @handler    = Handler.new
       @commands   = []
       @new_models = []
@@ -18,7 +17,7 @@ module OrgTodoist
     def pull handler=@handler, options={}
       query = options.merge(handler.to_h).merge({resource_types: '["all"]'})
       res   = get '/sync', query: query
-      log.info "Pull todoist => org" if @verbose
+      log.info "Pull todoist => org"
       @handler = Handler.new res
       res
     end
@@ -32,11 +31,9 @@ module OrgTodoist
 
     def push options={}
       @commands.each_slice(50) do |commands|
-        if @verbose
-          log.info "-" * 40
-          log.info "Push org => todoist with #{commands.size} commands"
-          log.info "Current handler is #{@handler.to_h}"
-        end
+        log.info "-" * 40
+        log.info "Push org => todoist with #{commands.size} commands"
+        log.info "Current handler is #{@handler.to_h}"
         push_chunk_of_commands commands
       end
       @commands   = []
@@ -63,7 +60,7 @@ module OrgTodoist
 
     private
     def push_chunk_of_commands commands, options={}
-      log.info commands if @verbose
+      log.info commands
       body = {commands: commands.to_json}
       res  = post '/sync', body: body
       swap_temp_ids res
@@ -87,7 +84,7 @@ module OrgTodoist
     def swap_temp_ids res
       @new_models.each do |model|
         # debug
-        # p res.body['TempIdMapping']
+        log.info res.body['TempIdMapping']
         # p res.body
         # p model.temp_id
         id = res.body['TempIdMapping'][model.temp_id]
@@ -107,6 +104,7 @@ module OrgTodoist
     end
 
     class Response
+      include Logging
       attr_reader :body, :projects
 
       def initialize raw_res
