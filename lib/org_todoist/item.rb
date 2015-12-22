@@ -60,7 +60,7 @@ module OrgTodoist
       args = super
 
       if tags = @raw['tags']
-        args['labels'] = (args['labels'] + tags_to_labels(tags)).sort.uniq
+        args['labels'] = tags_to_labels(tags).sort.uniq
       end
 
       # debugger
