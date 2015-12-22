@@ -58,14 +58,11 @@ module OrgTodoist
     # Todoist API に送る形式へ変換する
     def to_args
       args = super
+
       if tags = @raw['tags']
-        tags.each do |tag|
-          if label = Label[tag]
-            args['labels'] << label.id
-          end
-        end
-        args['labels'] = args['labels'].sort.uniq
+        args['labels'] = (args['labels'] + tags_to_labels(tags)).sort.uniq
       end
+
       # debugger
       args
     end
@@ -75,6 +72,17 @@ module OrgTodoist
                                due_date_utc date_string
                                item_order indent collapsed project_id
                                labels)
+    end
+
+    private
+    def tags_to_labels tags
+      tags.map do |tag|
+        if label = Label[tag]
+          label.id
+        else
+          nil
+        end
+      end.compact
     end
   end
 end

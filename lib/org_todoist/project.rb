@@ -32,6 +32,11 @@ module OrgTodoist
       api.reserve 'project_delete', self, {'ids' => [id]}
     end
 
+    # Todoist では TAG を所持できないが、Org では所持できるので仮想的に持つ
+    def tags
+      @raw['tags']
+    end
+
     def todoist_safe_key
       @todoist_safe_key ||= %w(id name color collapsed
                                item_order indent)

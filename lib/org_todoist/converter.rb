@@ -64,7 +64,8 @@ module OrgTodoist
         attrs = {
           "id"     => headline.id,
           "name"   => headline.title,
-          "indent" => indent
+          "indent" => indent,
+          "tags"   => headline.tags
         }
 
         project = OrgTodoist::Project.find_or_init(attrs)
@@ -84,7 +85,7 @@ module OrgTodoist
           "content" => headline.title,
           "indent"  => indent,
           "project" => project,
-          "tags"    => headline.tags
+          "tags"    => (project.tags + headline.tags).sort.uniq.compact
         }
         if headline.scheduled_at
           attrs['due_date_utc'] = time_todoist_format(headline.scheduled_at.start_time)
