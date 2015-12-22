@@ -14,6 +14,7 @@ module OrgTodoist
 
     def sync!
       pull_todoist
+
       import_org_file
       print_projects_tree if OrgTodoist.verbose?
       debugger            if OrgTodoist.debug?

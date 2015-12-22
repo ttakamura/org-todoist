@@ -82,7 +82,8 @@ module OrgTodoist
           "id"      => headline.id,
           "content" => headline.title,
           "indent"  => indent,
-          "project" => project
+          "project" => project,
+          "tags"    => headline.tags
         }
         if headline.scheduled_at
           attrs['due_date_utc'] = time_todoist_format(headline.scheduled_at.start_time)

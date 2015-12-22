@@ -112,6 +112,10 @@ module OrgTodoist
         check_error raw_res
 
         if @body['Projects']
+          @body['Labels'].each do |label|
+            Label.new(label)
+          end
+
           notes = {}
           @body['Notes'].each do |note|
             (notes[note['item_id']] ||= []) << note

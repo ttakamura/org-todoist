@@ -131,9 +131,13 @@ module OrgTodoist
     private
     def store_to_records
       # top レベルは保存しない
-      if id && level && level > 0
+      if can_store_to_records?
         self.class.records[id] = self
       end
+    end
+
+    def can_store_to_records?
+      id && level && level > 0
     end
   end
 end
