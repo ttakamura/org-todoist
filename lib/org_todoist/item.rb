@@ -68,7 +68,7 @@ module OrgTodoist
         args['labels'] = args['labels'].sort.uniq
       end
 
-      debugger
+      # debugger
       args
     end
 

@@ -86,6 +86,10 @@ module OrgFormat
       @properties['ID'] = id.to_s
     end
 
+    def tags= tags
+      @tags = tags
+    end
+
     private
     def parse_effort_min effort=nil
       if effort
