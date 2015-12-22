@@ -58,7 +58,6 @@ module OrgTodoist
     # Todoist API に送る形式へ変換する
     def to_args
       args = super
-
       if tags = @raw['tags']
         tags.each do |tag|
           if label = Label[tag]
@@ -67,7 +66,6 @@ module OrgTodoist
         end
         args['labels'] = args['labels'].sort.uniq
       end
-
       # debugger
       args
     end
