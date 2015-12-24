@@ -6,6 +6,7 @@ module OrgTodoist
     attribute :project_id
     attribute :indent
     attribute :item_order
+    attribute :priority
 
     def initialize raw_item={}
       raw_item['indent']     ||= 1
@@ -71,7 +72,7 @@ module OrgTodoist
       @todoist_safe_key ||= %w(id content priority checked
                                due_date_utc date_string
                                item_order indent collapsed project_id
-                               labels)
+                               labels priority)
     end
 
     private

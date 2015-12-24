@@ -80,12 +80,13 @@ module OrgTodoist
 
       def to_todoist_item headline, project, indent
         attrs = {
-          "checked" => (headline.done? ? 1 : 0),
-          "id"      => headline.id,
-          "content" => headline.title,
-          "indent"  => indent,
-          "project" => project,
-          "tags"    => (project.tags + headline.tags).sort.uniq.compact
+          "checked"  => (headline.done? ? 1 : 0),
+          "id"       => headline.id,
+          "content"  => headline.title,
+          "indent"   => indent,
+          "project"  => project,
+          "tags"     => (project.tags + headline.tags).sort.uniq.compact,
+          "priority" => headline.priority_to_i
         }
         if headline.scheduled_at
           attrs['due_date_utc'] = time_todoist_format(headline.scheduled_at.start_time)

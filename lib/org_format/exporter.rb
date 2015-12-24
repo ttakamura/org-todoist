@@ -2,7 +2,11 @@ module OrgFormat
   class Exporter
     module SerializeOrgHeadline
       def to_s
-        "#{'*' * level} #{state_to_s}#{title}#{tags_to_s}"
+        "#{'*' * level} #{state_to_s}#{priority_to_s}#{title}#{tags_to_s}"
+      end
+
+      def priority_to_s
+        priority ? "[##{priority}] " : ''
       end
 
       def state_to_s
@@ -12,7 +16,7 @@ module OrgFormat
       def tags_to_s
         return "" if tags.empty?
         tag_text = ":#{tags.join(':')}:"
-        padding_size = [(73 - (state_to_s.mb_width + title.mb_width + tag_text.mb_width)), 1].max
+        padding_size = [(73 - (state_to_s.mb_width + priority_to_s.mb_width + title.mb_width + tag_text.mb_width)), 1].max
         ' ' * padding_size + tag_text
       end
 

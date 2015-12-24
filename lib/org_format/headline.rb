@@ -4,7 +4,7 @@ module OrgFormat
     include ::OrgFormat::Exporter::SerializeOrgHeadline
 
     extend Forwardable
-    attr_reader :headlines, :tags, :level, :effort_min, :state,
+    attr_reader :headlines, :tags, :level, :effort_min, :state, :priority,
                 :scheduled_at, :clock_logs, :properties, :body_lines
 
     attr_accessor :todoist_obj, :title
@@ -30,14 +30,24 @@ module OrgFormat
     end
 
     def initialize top_headline, headlines=[]
-      if m = top_headline.headline_text.match(/(IDEA|TODO|DONE|NEXT|FOCUS|WAIT|SOMEDAY) /)
-        keyword = m[1]
-      else
-        keyword = top_headline.keyword
-      end
+      keyword = if m = top_headline.headline_text.match(/(IDEA|TODO|DONE|NEXT|FOCUS|WAIT|SOMEDAY) /)
+                  m[1]
+                else
+                  top_headline.keyword
+                end
+
+      priority = if m = top_headline.headline_text.match(/\[#(A|B|C|D)\] /)
+                   m[1]
+                 else
+                   nil
+                 end
+
       @self_line    = top_headline
       @state        = keyword
-      @title        = top_headline.headline_text.gsub(/(IDEA|TODO|DONE|NEXT|FOCUS|WAIT|SOMEDAY) /, '')
+      @priority     = priority
+      @title        = top_headline.headline_text
+                        .gsub(/(IDEA|TODO|DONE|NEXT|FOCUS|WAIT|SOMEDAY) /, '')
+                        .gsub(/\[#(A|B|C|D)\] /, '')
       @level        = top_headline.level
       @tags         = top_headline.tags
       @effort_min   = parse_effort_min top_headline.property_drawer['Effort']
@@ -88,6 +98,10 @@ module OrgFormat
 
     def tags= tags
       @tags = tags
+    end
+
+    def priority_to_i
+      {'A' => 3, 'B' => 2, 'C' => 1}[priority] || 1
     end
 
     private
