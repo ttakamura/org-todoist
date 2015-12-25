@@ -63,6 +63,7 @@ module OrgTodoist
       if tags = @raw['tags']
         args['labels'] = tags_to_labels(tags).sort.uniq
       end
+      @raw['labels'] = args['labels']
 
       # debugger
       args

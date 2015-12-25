@@ -17,7 +17,7 @@ module OrgTodoist
       def from_todoist_item headline, item
         headline.id    = item.id
         headline.title = item.content
-        headline.tags  = (headline.tags + item.labels.map(&:name)).sort.uniq
+        headline.tags  = item.labels.map(&:name).sort.uniq
       end
 
       def from_todoist_new_item item
