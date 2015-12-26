@@ -17,6 +17,7 @@ module OrgTodoist
     def pull handler=@handler, options={}
       query = options.merge(handler.to_h).merge({resource_types: '["all"]'})
       res   = get '/sync', query: query
+      res.parse_synced_project
       log.info "Pull todoist => org"
       @handler = Handler.new res
       res
@@ -39,6 +40,12 @@ module OrgTodoist
       @commands   = []
       @new_models = []
       nil
+    end
+
+    def get_all_completed_items options={}
+      query = options
+      res   = get '/get_all_completed_items', query: query
+      res
     end
 
     # 全ての projects と items を削除する
@@ -110,7 +117,9 @@ module OrgTodoist
       def initialize raw_res
         @body = JSON.parse(raw_res.body)
         check_error raw_res
+      end
 
+      def parse_synced_project
         if @body['Projects']
           @body['Labels'].each do |label|
             Label.new(label)
