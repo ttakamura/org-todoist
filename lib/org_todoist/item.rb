@@ -76,6 +76,10 @@ module OrgTodoist
                                labels priority)
     end
 
+    def checked?
+      @raw['checked'] == 1
+    end
+
     private
     def tags_to_labels tags
       tags.map do |tag|

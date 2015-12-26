@@ -18,6 +18,7 @@ module OrgTodoist
         headline.id    = item.id
         headline.title = item.content
         headline.tags  = item.labels.map(&:name).sort.uniq
+        headline.done! if item.checked?
       end
 
       def from_todoist_new_item item
