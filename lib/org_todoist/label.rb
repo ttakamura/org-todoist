@@ -10,6 +10,16 @@ module OrgTodoist
       records.values.find{ |l| l.name == name }
     end
 
+    def self.tags_to_labels tags
+      tags.map do |tag|
+        if label = Label[tag]
+          label.id
+        else
+          nil
+        end
+      end.compact.sort.uniq
+    end
+
     def initialize raw_label={}
       super(raw_label)
     end

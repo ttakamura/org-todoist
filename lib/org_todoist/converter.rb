@@ -17,8 +17,7 @@ module OrgTodoist
       def from_todoist_item headline, item
         headline.id    = item.id
         headline.title = item.content
-        headline.tags  = item.labels.map(&:name).sort.uniq
-        headline.done! if item.checked?
+        # headline.tags  = item.labels.map(&:name).sort.uniq
       end
 
       def from_todoist_new_item item
@@ -100,7 +99,7 @@ module OrgTodoist
           "content"  => headline.title,
           "indent"   => indent,
           "project"  => project,
-          "tags"     => (project.tags + headline.tags).sort.uniq.compact,
+          "labels"   => Label.tags_to_labels(project.tags + headline.tags),
           "priority" => headline.priority_to_i
         }
         if headline.scheduled_at

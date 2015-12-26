@@ -56,19 +56,6 @@ module OrgTodoist
       api.reserve 'item_move', self, args
     end
 
-    # Todoist API に送る形式へ変換する
-    def to_args
-      args = super
-
-      if tags = @raw['tags']
-        args['labels'] = tags_to_labels(tags).sort.uniq
-      end
-      @raw['labels'] = args['labels']
-
-      # debugger
-      args
-    end
-
     def todoist_safe_key
       @todoist_safe_key ||= %w(id content priority checked
                                due_date_utc date_string
@@ -78,17 +65,6 @@ module OrgTodoist
 
     def checked?
       @raw['checked'] == 1
-    end
-
-    private
-    def tags_to_labels tags
-      tags.map do |tag|
-        if label = Label[tag]
-          label.id
-        else
-          nil
-        end
-      end.compact
     end
   end
 end
