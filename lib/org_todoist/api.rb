@@ -42,12 +42,6 @@ module OrgTodoist
       nil
     end
 
-    def get_all_completed_items options={}
-      query = options
-      res   = get '/get_all_completed_items', query: query
-      res
-    end
-
     # 全ての projects と items を削除する
     def seppuku!
       pull
@@ -63,6 +57,12 @@ module OrgTodoist
         item.destroy! self
       end
       push
+    end
+
+    def get_all_completed_items options={}
+      query = options
+      res   = get '/get_all_completed_items', query: query
+      res
     end
 
     private
