@@ -14,6 +14,7 @@ module OrgTodoist
 
     def sync!
       pull_todoist
+      pull_todoist_completed
 
       import_org_file
       print_projects_tree if OrgTodoist.verbose?
@@ -53,6 +54,15 @@ module OrgTodoist
 
     def pull_todoist
       @api.pull
+    end
+
+    def pull_todoist_completed
+      items = {}
+      res = @api.get_all_completed_items
+      res.body['items'].each do |item|
+        items[item['id']] = item
+      end
+      OrgTodoist::Converter.append_completed_items items
     end
 
     def push_todoist_projects

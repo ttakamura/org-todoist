@@ -26,6 +26,15 @@ module OrgTodoist
         from_todoist_item(headline, item)
         headline
       end
+
+      def append_completed_items items={}
+        @completed_items ||= {}
+        @completed_items = @completed_items.merge(items)
+      end
+
+      def completed_items
+        @completed_items
+      end
     end
 
     module FromOrgFormat
@@ -51,7 +60,12 @@ module OrgTodoist
 
         top_headline.headlines.each do |headline|
           if headline.action?
-            items << to_todoist_item(headline, current_pj, current_level)
+            if @completed_items[headline.id]
+              headline.done!
+            else
+              items << to_todoist_item(headline, current_pj, current_level)
+            end
+
             items << to_todoist_items(headline, current_pj, current_level+1)
           end
         end
