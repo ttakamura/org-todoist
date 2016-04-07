@@ -95,8 +95,11 @@ module OrgTodoist
         log.info res.body['TempIdMapping']
         # p res.body
         # p model.temp_id
-        id = res.body['TempIdMapping'][model.temp_id]
-        model.swap_temp_id id
+        if id = res.body['TempIdMapping'][model.temp_id]
+          model.swap_temp_id id
+        else
+          log.info "Missing TempIdMapping for #{model.inspect}"
+        end
       end
     end
 
