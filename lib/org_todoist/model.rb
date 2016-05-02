@@ -82,7 +82,7 @@ module OrgTodoist
         when 'due_date_utc'
           v.nil? ||
           v == @raw[k] ||
-          DateTime.parse(v) == DateTime.parse(@raw[k])
+          (v && @raw[k] && DateTime.parse(v) == DateTime.parse(@raw[k]))
         else
           v == @raw[k]
         end
