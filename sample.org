@@ -1,0 +1,6 @@
+* Inbox                                                     :PROJECT:INBOX:
+* Work                                                      :PROJECT:
+*** Project A                                               :PROJECT:
+**** TODO [#B] Buy a milk
+**** TODO [#A] Go to gym
+     SCHEDULED: <2016-09-01 Thu 14:00-16:00>

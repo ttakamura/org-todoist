@@ -1,7 +1,7 @@
-log/
+log/*.log
 .env
 sync.sh
-db/
+db/*.yaml
 
 # Created by https://www.gitignore.io/api/osx,linux,ruby
 
