@@ -4,7 +4,7 @@ module OrgTodoist
     include Logging
     include HTTParty
     # debug_output $stdout
-    base_uri 'https://todoist.com/API/v6'
+    base_uri 'https://todoist.com/API/v7'
     attr_reader :handler, :commands
 
     def initialize options={}
@@ -124,27 +124,27 @@ module OrgTodoist
       end
 
       def parse_synced_project
-        if @body['Projects']
-          @body['Labels'].each do |label|
+        if @body['projects']
+          @body['labels'].each do |label|
             Label.new(label)
           end
 
           notes = {}
-          @body['Notes'].each do |note|
+          @body['notes'].each do |note|
             (notes[note['item_id']] ||= []) << note
           end
 
           items = {}
-          @body['Items'].each do |item|
+          @body['items'].each do |item|
             item['notes'] = notes[item['id']] || []
             (items[item['project_id']] ||= []) << item
           end
 
-          @body['Projects'].each do |proj|
+          @body['projects'].each do |proj|
             proj['items'] = items[proj['id']] || []
           end
 
-          @projects = Project.top.parse_tree(@body['Projects'])
+          @projects = Project.top.parse_tree(@body['projects'])
         end
       end
 

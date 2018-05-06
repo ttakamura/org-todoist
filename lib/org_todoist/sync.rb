@@ -104,7 +104,7 @@ module OrgTodoist
       end
 
       # Create (inbox)
-      todoist_inbox = OrgTodoist::Project.records.values.find{|pj| pj.name == "Inbox" }
+      todoist_inbox = OrgTodoist::Project.records.values.find{|pj| pj.name == "Inbox"}
       todoist_inbox.items.each do |item|
         unless org_headlines.find{ |h| h.id.to_s == item.id.to_s }
           org_inbox.headlines << OrgTodoist::Converter.from_todoist_new_item(item)
